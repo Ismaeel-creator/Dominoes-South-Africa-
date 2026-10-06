@@ -6,14 +6,7 @@ A real-time, four-player South African dominoes room built with Next.js and Supa
 
 1. Create a Supabase project.
 2. In the Supabase SQL Editor, run [`supabase/migrations/202610050001_multiplayer_dominoes.sql`](supabase/migrations/202610050001_multiplayer_dominoes.sql).
-3. Copy `.env.example` to `.env.local` and set the project URL and **publishable** key:
-
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
-   ```
-
-   Legacy anon keys are also accepted. Never use a secret/service-role key in the browser or a `NEXT_PUBLIC_` variable.
+3. Copy `.env.example` to `.env.local`. It is prefilled with this project's public URL and publishable key. For another Supabase project, replace those values with its URL and publishable key. Legacy anon keys are also accepted. Never use a secret/service-role key in the browser or a `NEXT_PUBLIC_` variable.
 
 4. Install and start the app:
 
