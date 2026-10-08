@@ -537,3 +537,94 @@ button:disabled { cursor: not-allowed !important; opacity: .45; transform: none 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Solo-versus-CPU mode and Vercel-friendly practice table */
+.solo-cta {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 12px 11px;
+  border: 1px solid rgba(215,241,112,.18);
+  border-radius: 5px;
+  background: linear-gradient(105deg, rgba(215,241,112,.07), rgba(255,255,255,.018));
+}
+.solo-cta-badge {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid rgba(215,241,112,.3);
+  border-radius: 50%;
+  color: var(--lime);
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .05em;
+}
+.solo-cta > div { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
+.solo-cta > div strong { color: #e7eee1; font-size: 10px; }
+.solo-cta > div span { color: #829087; font-size: 8px; line-height: 1.4; }
+.solo-cta-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 9px; border: 1px solid rgba(215,241,112,.33); border-radius: 4px; color: var(--lime); font-family: var(--mono); font-size: 7px; letter-spacing: .08em; text-decoration: none; white-space: nowrap; transition: background .18s, border-color .18s; }
+.solo-cta-link:hover { border-color: var(--lime); background: rgba(215,241,112,.1); }
+
+.solo-nav-label { display: inline-flex; align-items: center; gap: 8px; color: #8d9a8e; font-family: var(--mono); font-size: 8px; letter-spacing: .11em; }
+.solo-nav-label > span:last-child { color: #536056; }
+.solo-mode-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 9px rgba(215,241,112,.6); }
+.solo-back-link { text-decoration: none; }
+.solo-content { padding-top: 34px; }
+.solo-heading { align-items: center; }
+.solo-heading h1 { font-size: clamp(30px, 3.2vw, 43px); }
+.solo-heading p { max-width: 610px; line-height: 1.55; }
+.solo-mode-pill { display: flex; align-items: center; gap: 9px; padding: 8px 12px; border: 1px solid rgba(215,241,112,.2); border-radius: 999px; background: rgba(215,241,112,.045); color: var(--lime); font-family: var(--mono); font-size: 9px; letter-spacing: .12em; }
+.solo-mode-pill i { color: #68786a; font-size: 7px; font-style: normal; }
+.solo-seats-panel { padding-bottom: 16px; }
+.solo-avatar { flex: 0 0 31px; display: grid; width: 31px; height: 31px; place-items: center; border: 1px solid rgba(239,243,229,.16); border-radius: 50%; background: rgba(255,255,255,.045); color: #bbc6b9; font-family: var(--mono); font-size: 7px; font-weight: 500; }
+.solo-avatar-teammate { border-color: rgba(105,185,137,.38); background: rgba(105,185,137,.11); color: #b6dfc2; }
+.solo-avatar-cpu { border-color: rgba(239,243,229,.13); color: #9da99d; }
+.solo-board-panel .board-row { justify-content: flex-start; }
+.solo-notice { margin-bottom: 15px; }
+.solo-control-panel { padding: 18px 16px 15px; }
+.solo-control-panel h2 { margin: 12px 0 18px; color: #e7ede1; font-family: var(--display); font-size: 20px; line-height: 1.25; letter-spacing: -.06em; }
+.solo-control-panel h2 em { color: var(--lime); font-family: Georgia, serif; font-weight: 400; }
+.solo-name-form { display: flex; flex-direction: column; gap: 9px; }
+.solo-name-form .field-label { margin: 0; }
+.solo-name-form .text-input { height: 42px; font-size: 11px; }
+.solo-name-form .button { min-height: 40px; justify-content: space-between; padding: 0 11px; font-size: 8px; }
+.solo-benefit { display: flex; align-items: flex-start; gap: 8px; margin-top: 14px; padding-top: 13px; border-top: 1px solid rgba(239,243,229,.08); }
+.solo-benefit > span { color: var(--gold); font-size: 13px; }
+.solo-benefit p { margin: 0; color: #849187; font-size: 8px; line-height: 1.55; }
+.solo-sidebar .rules-panel { padding-top: 16px; }
+.solo-sidebar .rules-panel h3 { margin-top: 10px; }
+.solo-back-full { justify-content: space-between; min-height: 38px; padding: 0 12px; font-size: 8px; text-decoration: none; }
+.cpu-thinking-dots { display: inline-flex; align-items: center; gap: 4px; padding: 0 5px; }
+.cpu-thinking-dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--lime); animation: cpu-think 1s ease-in-out infinite; }
+.cpu-thinking-dots i:nth-child(2) { animation-delay: .15s; }
+.cpu-thinking-dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes cpu-think { 0%, 60%, 100% { opacity: .35; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+
+@media (max-width: 850px) {
+  .solo-nav-label { display: none; }
+  .solo-table-grid { grid-template-columns: minmax(0,1fr); }
+  .solo-sidebar { display: grid; grid-template-columns: 1fr 1fr; align-items: start; }
+  .solo-sidebar .solo-control-panel { grid-column: 1; }
+  .solo-sidebar .rules-panel { grid-column: 2; grid-row: span 2; }
+  .solo-sidebar .solo-back-full { grid-column: 1; }
+}
+
+@media (max-width: 650px) {
+  .solo-content { padding-top: 22px; }
+  .solo-heading { align-items: flex-start; }
+  .solo-heading h1 { max-width: 320px; font-size: 28px; line-height: 1.08; }
+  .solo-heading p { max-width: 250px; font-size: 9px; }
+  .solo-mode-pill { margin-top: 18px; gap: 6px; padding: 7px 8px; font-size: 7px; }
+  .solo-back-link { width: 34px; height: 34px; overflow: hidden; padding: 0; font-size: 0; }
+  .solo-cta { grid-template-columns: 30px minmax(0,1fr); gap: 8px; }
+  .solo-cta-badge { width: 28px; height: 28px; }
+  .solo-cta-link { grid-column: 2; justify-self: start; padding: 7px 8px; }
+  .solo-sidebar { grid-template-columns: 1fr; }
+  .solo-sidebar .solo-control-panel, .solo-sidebar .rules-panel, .solo-sidebar .solo-back-full { grid-column: auto; grid-row: auto; }
+  .solo-control-panel { padding: 14px 13px; }
+  .solo-control-panel h2 br { display: none; }
+  .solo-sidebar .rules-panel { padding: 14px 13px; }
+}

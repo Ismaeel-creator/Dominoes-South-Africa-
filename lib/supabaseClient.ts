@@ -1,23 +1,26 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+// These are public browser credentials (the publishable key is designed to be visible).
+// Defaults keep preview/production deploys working without Vercel-specific build secrets;
+// environment variables can override them when deploying against another Supabase project.
+const defaultSupabaseUrl = 'https://zcamuvnupukwvzzqgcga.supabase.co';
+const defaultPublishableKey = 'sb_publishable_AKR2wRnnC4YgJyjyJhicoQ_snOWth5j';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || defaultSupabaseUrl;
 const supabaseKey =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim() ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ||
+  defaultPublishableKey;
 
 export const supabaseConfigured = Boolean(supabaseUrl && supabaseKey);
 
-// Room creation and play are disabled until the public Supabase settings are supplied.
-// Publishable keys and legacy anon keys are safe for browser use; never use service_role here.
-export const supabase = supabaseConfigured
-  ? createClient(supabaseUrl!, supabaseKey!, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-        detectSessionInUrl: false,
-      },
-      realtime: {
-        params: { eventsPerSecond: 10 },
-      },
-    })
-  : null;
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    persistSession: false,
+    autoRefreshToken: false,
+    detectSessionInUrl: false,
+  },
+  realtime: {
+    params: { eventsPerSecond: 10 },
+  },
+});

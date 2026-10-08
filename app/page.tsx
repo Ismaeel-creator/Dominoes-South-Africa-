@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   BoardDomino,
@@ -27,7 +28,7 @@ type CreateOrJoinResult = {
 };
 
 async function fetchRoomSnapshot(session: RoomSession): Promise<RoomSnapshot> {
-  if (!supabase) throw new Error('Add your Supabase URL and anon key to enable multiplayer.');
+  if (!supabase) throw new Error('Supabase configuration is unavailable. Check the public project settings.');
 
   const { data, error } = await supabase.rpc('get_domino_room', {
     p_room_code: session.roomCode,
@@ -765,11 +766,17 @@ export default function HomePage() {
                 <p className="button-caption">Get the code from the person who opened the room.</p>
               </form>
 
+              <div className="solo-cta">
+                <span className="solo-cta-badge">CPU</span>
+                <div><strong>Flying solo?</strong><span>Play a full four-seat table against CPU.</span></div>
+                <Link className="solo-cta-link" href="/solo">PLAY SOLO <span aria-hidden="true">↗</span></Link>
+              </div>
+
               {busy && <div className="form-progress"><span className="loading-spinner small-spinner" /> Connecting to the table…</div>}
               {!supabaseConfigured && (
                 <div className="setup-message">
                   <span className="setup-mark">i</span>
-                  <p><strong>One quick setup first.</strong> Add your Supabase project URL and anon key to <code>.env.local</code>, then run the SQL migration in <code>supabase/migrations</code>.</p>
+                  <p><strong>One quick setup first.</strong> Add your Supabase project URL and publishable/anon key to <code>.env.local</code>, then run the SQL migration in <code>supabase/migrations</code>.</p>
                 </div>
               )}
 

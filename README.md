@@ -1,41 +1,32 @@
-# SA Dominoes Multiplayer
+# SA Dominoes
 
-A real-time, four-player South African dominoes room built with Next.js and Supabase. Players sit in alternating teams (A: seats 1 and 3; B: seats 2 and 4), play a double-six set, and race to 100. A blocked hand is scored automatically: the team with the lower combined pip count earns the difference; equal counts are a **WASH** with no points, and the dealer stays.
+A South African double-six dominoes app with both a four-player realtime table and a one-player practice table against three CPU seats.
 
 ## Run locally
 
-1. Create a Supabase project.
-2. In the Supabase SQL Editor, run [`supabase/migrations/202610050001_multiplayer_dominoes.sql`](supabase/migrations/202610050001_multiplayer_dominoes.sql).
-3. Copy `.env.example` to `.env.local`. It is prefilled with this project's public URL and publishable key. For another Supabase project, replace those values with its URL and publishable key. Legacy anon keys are also accepted. Never use a secret/service-role key in the browser or a `NEXT_PUBLIC_` variable.
+```bash
+npm install
+npm run dev
+```
 
-4. Install and start the app:
+Open `http://localhost:3000`. The repository is preconfigured with the project's **public** Supabase URL and publishable key, so you do not need a local environment file to use this project. `.env.example` documents the same values. To connect a different Supabase project, copy `.env.example` to `.env.local` and replace the URL/key; environment values override the defaults.
 
-   ```bash
-   npm install
-   npm run dev
-   ```
+The publishable key is intended for browser use. Never add a Supabase secret/service-role key to the app, a `NEXT_PUBLIC_` variable, or Git.
 
-   Open `http://localhost:3000`.
+## Supabase setup
 
-Without the two Supabase environment variables, the landing page remains viewable but room actions stay disabled and show the setup instructions.
+In the Supabase SQL Editor, run [`supabase/migrations/202610050001_multiplayer_dominoes.sql`](supabase/migrations/202610050001_multiplayer_dominoes.sql). This creates the multiplayer tables, RLS policies, Realtime publication entries, and validated RPC operations. The private hand/token table is not exposed to clients or Realtime.
 
-## Deploy to Vercel
+The migration removes the old prototype's public `hand` column. Discard any active rooms from that first prototype before running the migration, then create new rooms in this version.
 
-Import this repository into Vercel, add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` under **Project Settings → Environment Variables**, then deploy. Run the SQL migration against the same Supabase project first. No server-side secrets are needed by the app.
+## Game modes
 
-## What is implemented
+- **Multiplayer:** create or join with an `SA####` code; the fourth seat starts the hand. Seats 1 and 3 are Team A; seats 2 and 4 are Team B. Hands are dealt privately and updates sync through Supabase Realtime.
+- **1P vs CPU:** one human and three CPU seats, with a CPU partner opposite you. This mode runs locally in the browser and does not require Supabase, a room code, or a login.
+- Both modes use the double-six set, highest-double opener, legal left/right play, and four consecutive passes to block. The lower combined team pip count scores the difference; equal counts are a WASH (no points, same dealer). First team to 100 wins.
 
-- Create a room and join by a shareable `SA####` code; copy/share invites or send directly through WhatsApp. The fourth seat starts the hand.
-- Four seats, fixed A/B partnerships, a double-six deck, seven tiles dealt per player, and highest-double opening play.
-- Valid left/right placement and server-validated passes; four consecutive passes block the hand.
-- Private hands: only the player's own tiles are returned from the token-checked RPC. Room/roster tables expose only the public board, score, names, and tile counts.
-- Supabase Realtime refreshes the room and roster for every player.
-- Going out or blocking ends a hand. Lower combined team pips score the difference; equal counts produce a no-points WASH. First team to 100 wins.
-- On a WASH, the same dealer deals again. Otherwise the dealer rotates. Seat 1 (the host) starts the next hand.
-- The room session is saved in the current browser so a player can resume after refreshing or returning to the lobby.
+## Vercel
 
-## Security notes
+Vercel recognizes the Next.js app and builds it with the checked-in `vercel.json` (`npm install`, `npm run build`). The current project's public Supabase settings have a safe client-side fallback in the app, so a Vercel build does not depend on local `.env.local`. If you deploy against a different Supabase project, set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in Vercel's Environment Variables and run the SQL migration on that project first.
 
-All browser writes use SQL RPC functions that check a per-player UUID capability token and validate the current turn, tile, endpoints, and pass. Direct writes to the room/roster tables are revoked. The private hand/token table has RLS enabled, no client policies, and is intentionally excluded from Realtime. The migration also drops the old prototype's public `hand` column.
-
-The earlier prototype schema did not have resumable private player sessions. If you already have active rooms created by that prototype, finish or discard them before running this migration; create a fresh room with the upgraded app. The app is anonymous (no account sign-in), so treat room codes as invitations and avoid using personal/sensitive names.
+A push to this session branch can create a Vercel Preview Deployment if the repository is connected to Vercel. Production deployment still depends on the Vercel project's configured production branch.
